@@ -8,28 +8,42 @@ export const useSocketContext = () => {
   return useContext(SocketContext);
 };
 
+// const socket = io.connect("localhost:1337/assistant");
+
+// socket.on("connect", () => {
+//   console.log("connected");
+// });
+
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const { authUser, userId, token } = useContext(AuthContext);
 
   useEffect(() => {
-    if (authUser) {
-      const newSocket = io("http://localhost:3000", {
-        query: {
-          userId: userId,
-        },
-      });
-      setSocket(newSocket);
-      return () => {
-        if (newSocket) newSocket.close();
-      };
-    } else {
-      if (socket) {
-        socket.close();
-        setSocket(null);
+    console.log("Socket hello");
+    console.log(userId);
+    try {
+      if (userId) {
+        const socket = io("http://192.168.150.145:3000");
+        socket.on("connect", () => {
+          console.log("connected");
+        });
+        socket.on("connect_error", (error) => {
+          console.log("connection error", error);
+        });
+        setSocket(socket);
+        return () => {
+          if (socket) socket.close();
+        };
+      } else {
+        if (socket) {
+          socket.close();
+          setSocket(null);
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
-  }, [authUser, userId, token]);
+  }, [userId]);
 
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
