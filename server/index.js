@@ -7,34 +7,34 @@ const jwt = require("jsonwebtoken");
 const http = require("http");
 
 const app = express();
-const server = http.createServer(app);
-const io = require("socket.io")(server);
+// const server = http.createServer(app);
+const { Server } = require("socket.io");
+// const io = require("socket.io")(server);
 const port = process.env.PORT || 3000;
 
-const corsOptions = {
-  // origin: "http://192.168.241.179:8081",
-  allowedHeaders: [
-    "Access-Control-Allow-Origin",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  ],
-  optionsSuccessStatus: 200,
-  methods: ["GET", "POST"],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(function (req, res, next) {
+  console.log("cors function runnning");
+  res.header("Access-Control-Allow-Origin", "*");
+
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+const server = app.listen(port, () => console.log(`Listening ${port}`));
+const io = new Server(server, {
+  cors: {
+    origin: ["http://127.0.0.1:8081", "http://192.168.35.179:8081","http://localhost:8081"], // Allow any origin for testing purposes. This should be changed on production.
+  },
+});
 
 mongoose
-  .connect("mongodb://localhost:27017/chatApp", {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
+  .connect("mongodb://localhost:27017/chatApp", {})
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.error("Error connecting to MongoDB", error));
-
-server.listen(port, () => console.log(`Listening on port ${port}`));
 
 const User = require("./models/user");
 const Message = require("./models/message");
@@ -108,6 +108,9 @@ app.get("/users/:userId", async (req, res) => {
         return user;
       })
       .filter((user) => !user.friends.includes(userId));
+
+    console.log(usersWithPendingRequests);
+    console.log(filteredUsers);
 
     // Combine the two arrays and ensure uniqueness
     const uniqueUsersMap = new Map();
