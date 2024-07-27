@@ -28,18 +28,19 @@ import { stick } from '../assert.js'
 
 
 
-const ChatScreen = () => {
-
-
+const ChatScreen = ({navigation,route}) => {
     const flatListRef = useRef(null);
 
     useEffect(() => {
         flatListRef.current?.scrollToEnd({ animated: true });
     });
 
+    const {receiverId,name,image}=route.params
+
     const dummyData = {
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMxAUhf0gMOYVfgoYXhdi2WOv58JEyMMdjWw&s",
-        name: "Angel Priya",
+        // img: "https://img.freepik.com/free-photo/portrait-young-woman-wearing-glasses-3d-rendering_1142-43632.jpg?ga=GA1.1.1929705956.1708626574&semt=ais_user",
+        img: image,
+        name: name,
     };
 
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -142,7 +143,8 @@ const ChatScreen = () => {
                 <View style={[styles.mainContainer, { backgroundColor }]}>
                     <View style={styles.topContainer}>
                         <View style={styles.leftIcons}>
-                            <TouchableOpacity style={styles.iconPadding}>
+                            <TouchableOpacity style={styles.iconPadding} 
+                            onPress={() => navigation.navigate("bottomtabs")}>
                                 <Ionicons name="arrow-back" size={24} color="white" />
                             </TouchableOpacity>
                             <Image style={styles.dp} source={{ uri: dummyData.img }} />
@@ -166,7 +168,7 @@ const ChatScreen = () => {
 
                     </View>
 
-                    <FlatList
+                    <FlatList style={{backgroundColor: '#d6eaff'}}
                         data={chatData}
                         ref={flatListRef}
                         keyExtractor={(item) => item.id}
@@ -269,145 +271,143 @@ const ChatScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: "#1A3636",
-      
-       
-    },
-    mainContainer: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight-25,
-        borderWidth:0,
-    },
-    topContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#1A3636",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        width: "100%",
-        borderWidth:0,
-        borderColor:'yellow',
-        marginTop:0,
-
-    },
-    leftIcons: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    rightIcons: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    iconPadding: {
-        paddingHorizontal: 8,
-    },
-    dp: {
-        width: 30,
-        height: 30,
-        borderRadius: 15,
-        marginRight: 10,
-    },
-    name: {
-        fontSize: 16,
-        fontWeight: "bold",
-        color: "white",
-    },
-    messageContainer: {
-        backgroundColor: "#444",
-        borderRadius: 13,
-        padding: 10,
-        marginVertical: 5,
-        maxWidth: 350,
-    },
-    myMessage: {
-        alignSelf: "flex-end",
-        backgroundColor: "#002D62", 
-    },
-    otherMessage: {
-        alignSelf: "flex-start",
-        backgroundColor:"#36454F",
-    },
-    messageText: {
-        color: "white",
-        fontWeight:'500'
-    },
-    timestamp: {
-        color: "#bbb",
-        fontSize: 12,
-        marginTop: 5,
-        textAlign: "right",
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        paddingHorizontal: 10,
-        borderTopWidth: 1,
-        borderColor:'white',
-        backgroundColor: "#B2BEB5",
-        paddingVertical: 10,
-        zIndex: 1,
-    },
-    input: {
-        flex: 1,
-        height: 40,
-        borderWidth: 2,
-        borderColor: "#1A3636",
-        borderRadius: 20,
-        paddingHorizontal: 10,
-        backgroundColor: "#FFF",
-        marginRight: 10,
-        marginLeft: 5,
-
-    },
-    iconContainer: {
-        marginRight: 15
-    },
-    sendButton: {
-        backgroundColor: "#1A3636",
-        paddingVertical: 8,
-        paddingHorizontal: 18,
-        borderRadius: 20,
-    },
-    emojiContainer: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "#333",
-        zIndex: 1,
-        height: 285,
-    },
-    emojiHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
-    },
-    emojiHeaderText: {
-        color: "white",
-        fontSize: 16,
-    },
-    emojiSelector: {
-        height: 250,
-    },
-    stickerKeyboardContainer: {
-        flex: 1,
-        position: "absolute",
-        justifyContent: "flex-end",
-        bottom: 0,
-        height: 300,
-        backgroundColor: "#fff",
-    },
-    stickerImage: {
-        width: 80,
-        height: 80,
-        margin: 6,
-    },
+  safeArea: {
+    paddingTop:15,
+    flex: 1,
+    backgroundColor: "#0255ad",
+  },
+  mainContainer: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight - 25,
+    borderWidth: 0,
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#0255ad",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    width: "100%",
+    borderWidth: 0,
+    borderColor: "yellow",
+    marginTop: 0,
+  },
+  leftIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  rightIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  iconPadding: {
+    paddingHorizontal: 8,
+  },
+  dp: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
+  messageContainer: {
+    backgroundColor: "#6ac7ea",
+    borderRadius: 13,
+    padding: 10,
+    marginVertical: 5,
+    maxWidth: 350,
+  },
+  myMessage: {
+    alignSelf: "flex-end",
+    backgroundColor: "#015373",
+  },
+  otherMessage: {
+    alignSelf: "flex-start",
+    backgroundColor: "#424142",
+    // backgroundColor: "#4f0173",
+  },
+  messageText: {
+    color: "white",
+    fontWeight: "500",
+  },
+  timestamp: {
+    color: "#bbb",
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: "right",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    borderTopWidth: 1,
+    borderColor: "white",
+    backgroundColor: "#beb6ea",
+    paddingVertical: 10,
+    zIndex: 1,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#0255ad",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#FFF",
+    marginRight: 10,
+    marginLeft: 5,
+  },
+  iconContainer: {
+    marginRight: 15,
+  },
+  sendButton: {
+    backgroundColor: "#0255ad",
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    borderRadius: 20,
+  },
+  emojiContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#333",
+    zIndex: 1,
+    height: 285,
+  },
+  emojiHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  emojiHeaderText: {
+    color: "white",
+    fontSize: 16,
+  },
+  emojiSelector: {
+    height: 250,
+  },
+  stickerKeyboardContainer: {
+    flex: 1,
+    position: "absolute",
+    justifyContent: "flex-end",
+    bottom: 0,
+    height: 300,
+    backgroundColor: "#fff",
+  },
+  stickerImage: {
+    width: 80,
+    height: 80,
+    margin: 6,
+  },
 });
 
 export default ChatScreen;
